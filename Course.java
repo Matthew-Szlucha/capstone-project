@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class Course {
@@ -43,6 +45,34 @@ public class Course {
             }
         }
         return course;
+    }
+
+    //outputs Course to CSV
+    public static void toCSV(String filename, Course course) {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(filename));
+
+            writer.write("prefix,num,days,timeslot,isOnline,instructor,room");
+            writer.newLine();
+            writer.write(course.prefix + "," + Integer.toString(course.num) + "," + course.days + "," + course.timeslot + "," + Boolean.toString(course.isOnline) 
+            + "," + course.instructor + "," + course.room);
+            writer.close();
+        
+        } catch (IOException ie) {
+            ie.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException ie) {
+                System.err.println("Error closing BufferedWriter");
+                ie.printStackTrace();
+            }
+        }
+    }
+
+    public void setPrefix(String newPrefix) {
+        this.prefix = newPrefix;
     }
 
     public void show() {
