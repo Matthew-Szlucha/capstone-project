@@ -6,8 +6,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
-public class Scheduler extends Application{
-    @Override
+public class Scheduler /*extends Application*/{
+    /*@Override
     public void start(Stage stage){
         stage.setTitle("Scheduler Tool");
 
@@ -18,20 +18,15 @@ public class Scheduler extends Application{
         Scene scene = new Scene(testBox, 450, 350);
         stage.setScene(scene);
         stage.show();
-    }
+    }*/
 
     
     public static void main(String[] args) throws IOException {
 
-        //get course from CSV
-        Course testCourse = Course.fromCSV("courses.csv");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
-        testCourse.setPrefix(reader.readLine());
-        Course.toCSV("courses.csv", testCourse);
-        testCourse.show();
+        Map<String, Course> courses = Course.fromCSV("courses.csv");
+        courses.get("CS108").show();
         
         //start JavaFX
-        launch(args);
+        //launch();
     }
 }

@@ -15,36 +15,39 @@ public class Course {
         this.room = room;
     }
 
-    //read contents of new Course object from CSV file
-    public static Course fromCSV(String filename){
-        BufferedReader br = null;
-        Course course = null;
-        
-        //dealing with files can be messy, catch an exception if anything goes wrong
+    //create Course objects from CSV file and store them in a map
+    public static Map<String, Course> fromCSV(String filename) {
+        BufferedReader reader = null;
+
+        //Create map of Courses with the name as the key
+        Map<String, Course> map = new HashMap<String, Course>();
         try {
-            br = new BufferedReader(new FileReader(filename));
+            reader = new BufferedReader(new FileReader(filename));
 
             String line = "";
             //skip header
-            br.readLine();
+            reader.readLine();
             //read from second line
-            while((line = br.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 String[] field = line.split(",");
-                if(field.length > 0){
-                    course = new Course(field[0], Integer.parseInt(field[1]), field[2], field[3], Boolean.parseBoolean(field[4]), field[5], field[6]);
+
+                if (field.length > 0) {
+                    //save courses in Course object and store that object in the map
+                    Course course = new Course(field[0], field[1], field[2], field[3], field[4], field[5], field[6]);
+                    map.put(field[0] + field[1], course);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
-                br.close();
+                reader.close();
             } catch (IOException ie) {
-                System.err.println("Error closing BufferedReader");
+                System.out.println("Error closing the BufferedReader");
                 ie.printStackTrace();
             }
         }
-        return course;
+        return map;
     }
 
     //outputs Course to CSV
