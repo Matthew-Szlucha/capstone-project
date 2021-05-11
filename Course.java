@@ -3,6 +3,8 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Course {
     public Course(String prefix, int num, String days, String timeslot, boolean isOnline, String instructor, String room){
@@ -33,7 +35,7 @@ public class Course {
 
                 if (field.length > 0) {
                     //save courses in Course object and store that object in the map
-                    Course course = new Course(field[0], field[1], field[2], field[3], field[4], field[5], field[6]);
+                    Course course = new Course(field[0], Integer.parseInt(field[1]), field[2], field[3], Boolean.parseBoolean(field[4]), field[5], field[6]);
                     map.put(field[0] + field[1], course);
                 }
             }
@@ -74,8 +76,12 @@ public class Course {
         }
     }
 
-    public void setPrefix(String newPrefix) {
-        this.prefix = newPrefix;
+    public void setInstructor(String newInstructor) {
+        this.instructor = newInstructor;
+    }
+
+    public String getInstructor(){
+        return this.instructor;
     }
 
     public void show() {

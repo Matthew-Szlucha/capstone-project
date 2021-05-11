@@ -16,6 +16,7 @@
             "name": "Launch Scheduler",
             "request": "launch",
             "mainClass": "Scheduler",
+            "projectName": "capstone-project_c0a798db",
             "vmArgs": "--module-path C:/Users/mszlu/javafx-sdk-11.0.2/lib --add-modules javafx.controls,javafx.fxml"
         }
     ]
