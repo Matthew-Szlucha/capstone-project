@@ -1,2 +1,5 @@
 prefix,num,days,timeslot,isOnline,instructor,room
-CS,450,TR,10:00-11:50,true,Reale,N/A
+CS,450,TR,10:00-11:50,TRUE,Reale,N/A
+CS,108,TR,8:00-9:50,FALSE,Urban,KNSL A129
+CS,220,MWF,9:20-10:30,FALSE,Confer,KNSL C108
+CS,240,MWF,10:40-11:50,FALSE,Sarner,KNSL C112

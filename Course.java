@@ -3,8 +3,9 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
+//import java.util.Map;
+//import java.util.HashMap;
+import javafx.collections.*;
 
 public class Course {
     public Course(String prefix, int num, String days, String timeslot, boolean isOnline, String instructor, String room){
@@ -17,12 +18,13 @@ public class Course {
         this.room = room;
     }
 
-    //create Course objects from CSV file and store them in a map
-    public static Map<String, Course> fromCSV(String filename) {
+    //create Course objects from CSV file and store them in a list
+    public static ObservableList<Course> fromCSV(String filename) {
         BufferedReader reader = null;
 
         //Create map of Courses with the name as the key
-        Map<String, Course> map = new HashMap<String, Course>();
+        ObservableList<Course> list = FXCollections.<Course>observableArrayList();
+        //Map<Integer, Course> map = new HashMap<Integer, Course>();
         try {
             reader = new BufferedReader(new FileReader(filename));
 
@@ -32,11 +34,13 @@ public class Course {
             //read from second line
             while ((line = reader.readLine()) != null) {
                 String[] field = line.split(",");
+                //int i = 0;
 
                 if (field.length > 0) {
                     //save courses in Course object and store that object in the map
                     Course course = new Course(field[0], Integer.parseInt(field[1]), field[2], field[3], Boolean.parseBoolean(field[4]), field[5], field[6]);
-                    map.put(field[0] + field[1], course);
+                    //map.put(i, course);
+                    list.add(course);
                 }
             }
         } catch (Exception e) {
@@ -49,20 +53,25 @@ public class Course {
                 ie.printStackTrace();
             }
         }
-        return map;
+        return list;
     }
 
     //outputs Course to CSV
-    public static void toCSV(String filename, Course course) {
+    public static void toCSV(String filename, ObservableList<Course> courses) {
         BufferedWriter writer = null;
         try {
             writer = new BufferedWriter(new FileWriter(filename));
 
             writer.write("prefix,num,days,timeslot,isOnline,instructor,room");
+            
+            //skip header
             writer.newLine();
-            writer.write(course.prefix + "," + Integer.toString(course.num) + "," + course.days + "," + course.timeslot + "," + Boolean.toString(course.isOnline) 
-            + "," + course.instructor + "," + course.room);
+            
+            for(int i = 0; i < courses.size(); i++){
+            writer.write(courses.get(i).getPrefix() + "," + Integer.toString(courses.get(i).getNum()) + "," + courses.get(i).getDays() + "," + 
+            courses.get(i).getTimeslot() + "," + Boolean.toString(courses.get(i).getIsOnline()) + "," + courses.get(i).getInstructor() + "," + courses.get(i).getRoom());
             writer.close();
+            }
         
         } catch (IOException ie) {
             ie.printStackTrace();
@@ -76,12 +85,60 @@ public class Course {
         }
     }
 
+    public void setPrefix(String newPrefix) {
+        this.prefix = newPrefix;
+    }
+
+    public String getPrefix(){
+        return this.prefix;
+    }
+    
+    public void setNum(Integer newNum) {
+        this.num = newNum;
+    }
+
+    public Integer getNum(){
+        return this.num;
+    }
+    
+    public void setDays(String newDays) {
+        this.days = newDays;
+    }
+
+    public String getDays(){
+        return this.days;
+    }
+    
+    public void setTimeslot(String newTimeslot) {
+        this.timeslot = newTimeslot;
+    }
+
+    public String getTimeslot(){
+        return this.timeslot;
+    }
+    
+    public void setIsOnline(Boolean newIsOnline) {
+        this.isOnline = newIsOnline;
+    }
+
+    public Boolean getIsOnline(){
+        return this.isOnline;
+    }
+    
     public void setInstructor(String newInstructor) {
         this.instructor = newInstructor;
     }
 
     public String getInstructor(){
         return this.instructor;
+    }
+
+    public void setRoom(String newRoom) {
+        this.room = newRoom;
+    }
+
+    public String getRoom(){
+        return this.room;
     }
 
     public void show() {
