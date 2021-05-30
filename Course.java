@@ -8,7 +8,7 @@ import java.io.IOException;
 import javafx.collections.*;
 
 public class Course {
-    public Course(String prefix, int num, String days, String timeslot, boolean isOnline, String instructor, String room){
+    public Course(String prefix, String num, String days, String timeslot, boolean isOnline, String instructor, String room){
         this.prefix = prefix;
         this.num = num;
         this.days = days;
@@ -38,7 +38,7 @@ public class Course {
 
                 if (field.length > 0) {
                     //save courses in Course object and store that object in the map
-                    Course course = new Course(field[0], Integer.parseInt(field[1]), field[2], field[3], Boolean.parseBoolean(field[4]), field[5], field[6]);
+                    Course course = new Course(field[0], field[1], field[2], field[3], Boolean.parseBoolean(field[4]), field[5], field[6]);
                     //map.put(i, course);
                     list.add(course);
                 }
@@ -55,7 +55,7 @@ public class Course {
         }
         return list;
     }
-
+    
     //outputs Course to CSV
     public static void toCSV(String filename, ObservableList<Course> courses) {
         BufferedWriter writer = null;
@@ -64,14 +64,14 @@ public class Course {
 
             writer.write("prefix,num,days,timeslot,isOnline,instructor,room");
             
-            //skip header
             writer.newLine();
             
             for(int i = 0; i < courses.size(); i++){
-            writer.write(courses.get(i).getPrefix() + "," + Integer.toString(courses.get(i).getNum()) + "," + courses.get(i).getDays() + "," + 
+            writer.write(courses.get(i).getPrefix() + "," + courses.get(i).getNum() + "," + courses.get(i).getDays() + "," + 
             courses.get(i).getTimeslot() + "," + Boolean.toString(courses.get(i).getIsOnline()) + "," + courses.get(i).getInstructor() + "," + courses.get(i).getRoom());
-            writer.close();
+            writer.newLine();
             }
+            writer.close();
         
         } catch (IOException ie) {
             ie.printStackTrace();
@@ -93,11 +93,11 @@ public class Course {
         return this.prefix;
     }
     
-    public void setNum(Integer newNum) {
+    public void setNum(String newNum) {
         this.num = newNum;
     }
 
-    public Integer getNum(){
+    public String getNum(){
         return this.num;
     }
     
@@ -146,7 +146,7 @@ public class Course {
     }
     
     private String prefix;
-    private int num;
+    private String num;
     private String days;
     private String timeslot;
     private boolean isOnline;

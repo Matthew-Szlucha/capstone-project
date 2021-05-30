@@ -3,19 +3,41 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.*;
 import javafx.stage.Stage;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import java.io.IOException;
 //import java.util.Map;
 import javafx.collections.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 public class Scheduler extends Application{
 
-
+    public static ObservableList listFromCSV(String filename){
+        BufferedReader reader = null;
+        ObservableList list = FXCollections.<Object>observableArrayList();
+        try {
+            reader = new BufferedReader(new FileReader(filename));
+            String line = "";
+            line = reader.readLine();
+            String[] field = line.split(",");
+            for(int i = 0; i < field.length; i++){
+                list.add(field[i]);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException ie) {
+                System.out.println("Error closing the BufferedReader");
+                ie.printStackTrace();
+            }
+        }
+        return list;
+    }
     
     public static void main(String[] args) throws IOException {
-
-        //Map<String, Course> courses = Course.fromCSV("courses.csv");
-        //courses.get("CS108").show();
         
         //start JavaFX
         launch();
@@ -25,15 +47,22 @@ public class Scheduler extends Application{
     @Override
     public void start(Stage stage){
         stage.setTitle("Scheduler");
-        //Map<Integer, Course> courses = Course.fromCSV("courses.csv");
         ObservableList<Course> courses = Course.fromCSV("courses.csv");
+        String onlineString[] = {"true", "false"};
 
-
-        Button button = new Button("Save changes");
-        Button print = new Button("Print course");
         Button save = new Button("Export to CSV");
+        Button add = new Button("Add new course");
+        TextField prefixField = new TextField("Prefix");
+        TextField numField = new TextField("Course Number");
+        TextField daysField = new TextField("Days");
+        TextField timeField = new TextField("Timeslot");
+        ComboBox<String> onlineBox = new ComboBox<String>(FXCollections.observableArrayList(onlineString));
+        ComboBox<String> instructorBox = new ComboBox<String>(listFromCSV("instructors.csv"));
+        TextField roomField = new TextField("Room");
+        HBox textbox = new HBox(prefixField, numField, daysField, timeField, onlineBox, instructorBox, roomField, add);
         TableView<Course> table = new TableView<>();
-        HBox hbox = new HBox(table, button, print, save);
+        VBox vbox = new VBox(table, save, textbox);
+        vbox.setSpacing(5);
         
         table.setEditable(true);
        
@@ -42,8 +71,9 @@ public class Scheduler extends Application{
         prefix.setCellFactory(TextFieldTableCell.<Course>forTableColumn());
         table.getColumns().add(prefix);
         
-        TableColumn<Course, Integer> num = new TableColumn<>("Number");
+        TableColumn<Course, String> num = new TableColumn<>("Number");
         num.setCellValueFactory(new PropertyValueFactory<>("num"));
+        num.setCellFactory(TextFieldTableCell.<Course>forTableColumn());
         table.getColumns().add(num);
 
         TableColumn<Course, String> days = new TableColumn<>("Day");
@@ -74,20 +104,20 @@ public class Scheduler extends Application{
             table.getItems().add(courses.get(i));
         }
 
-
-        //button.setOnAction(action -> {
-           // courses.get("CS450").setInstructor(text.getText());
-        //});
-        
-        //print.setOnAction(action -> {
-            //courses.get("CS450").show();
-        //});
-
         save.setOnAction(action -> {
             Course.toCSV("courses.csv", courses);
         });
+
+        add.setOnAction(action -> {
+            table.getItems().add(new Course(
+                prefixField.getText(), numField.getText(), daysField.getText(), timeField.getText(), 
+                Boolean.parseBoolean(onlineBox.getValue()), instructorBox.getValue(), roomField.getText()));
+            courses.add(new Course(
+                prefixField.getText(), numField.getText(), daysField.getText(), timeField.getText(), 
+                Boolean.parseBoolean(onlineBox.getValue()), instructorBox.getValue(), roomField.getText()));
+        });
        
-        Scene scene = new Scene(hbox, 825, 350);
+        Scene scene = new Scene(vbox, 999, 300);
         stage.setScene(scene);
         stage.show();
     }
